@@ -135,7 +135,7 @@ export function FileViewer({ selectedFile }: FileViewerProps) {
 
   if (!selectedFile) {
     return (
-      <section className="h-[calc(100svh-11rem)] border border-y-0 p-4">
+      <section className="h-[calc(100svh-9rem)] border border-y-0 p-4">
         <div className="h-full flex items-center justify-center text-muted-foreground">
           Select a file to view
         </div>
@@ -146,7 +146,7 @@ export function FileViewer({ selectedFile }: FileViewerProps) {
   return (
     <section className="border border-t-0 grid grid-cols-2 divide-x">
       {/* JSON Panel */}
-      <div className="h-[calc(100svh-11rem)] overflow-auto flex flex-col">
+      <div className="h-[calc(100svh-9rem)] overflow-auto flex flex-col">
         <div className="p-4 border-b font-semibold">Raw Data</div>
         <ScrollArea className="flex-1">
           <div className="p-4">
@@ -158,7 +158,7 @@ export function FileViewer({ selectedFile }: FileViewerProps) {
       </div>
 
       {/* Document Preview Panel */}
-      <div className="h-[calc(100svh-11rem)] overflow-auto flex flex-col">
+      <div className="h-[calc(100svh-9rem)] overflow-auto flex flex-col">
         <div className="p-4 border-b font-semibold">Document</div>
         <ScrollArea className="flex-1 p-4 max-w-none">
           {/* Preview content */}

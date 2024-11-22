@@ -31,7 +31,7 @@ export default function Home() {
             />
           </ResizablePanel>
           <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={60}>
+          <ResizablePanel defaultSize={80}>
             <FileViewer selectedFile={selectedFile} />
           </ResizablePanel>
         </ResizablePanelGroup>

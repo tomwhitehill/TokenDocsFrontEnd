@@ -66,7 +66,7 @@ export const FolderTreeComponent: FC<FolderTreeComponentProps> = ({
   }, [filteredItems, selectedItem, setSelectedItem, onFileSelect])
 
   return (
-    <div className="h-[calc(100svh-11rem)] flex-1 overflow-y-auto">
+    <div className="h-[calc(100svh-9rem)] flex-1 overflow-y-auto">
       {filteredItems.length > 0 ? (
         <FolderTree
           items={filteredItems}

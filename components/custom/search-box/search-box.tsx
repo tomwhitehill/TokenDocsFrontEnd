@@ -30,7 +30,6 @@ export default function SearchBox() {
   }) => {
     searchMutation.mutate(searchData, {
       onSuccess: (data: any) => {
-        console.log("Search result:", data);
         setResults(data);
         toast.success("Search completed successfully");
       },

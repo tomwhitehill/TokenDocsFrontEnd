@@ -29,7 +29,7 @@ const FolderTree: FC<FolderTreeProps> = ({
   };
 
   return (
-    <ScrollArea className="h-[calc(100svh-11rem)]" type="always">
+    <ScrollArea className="h-[calc(100svh-9rem)]" type="always">
       <div className="space-y-1 p-4">
         {items.map((item) => (
           <div key={item.documentId} style={{ paddingLeft: `${level * 16}px` }}>
