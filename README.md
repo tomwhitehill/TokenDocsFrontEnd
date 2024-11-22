@@ -1,4 +1,4 @@
-# Document Search Project
+# TokenDocs
 
 ## Overview
 
@@ -10,7 +10,6 @@ This project implements a document search system with customizable metadata filt
 - Filter documents by document type
 - Real-time search with debounce
 - Download functionality for documents
-- Responsive design with accessibility features
 
 ## Installation
 
@@ -33,7 +32,6 @@ This project implements a document search system with customizable metadata filt
    Create a `.env.local` file in the root directory and add the following variables:
    ```
    NEXT_PUBLIC_API_BASE_URL=your_api_base_url
-   NEXT_PUBLIC_SUBSCRIPTION_KEY=your_subscription_key
    NEXT_PUBLIC_API_VERSION=your_api_version
    ```
 

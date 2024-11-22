@@ -1,6 +1,6 @@
 export type FolderItem = {
   assetName: string;
-  documentId: string | number;
+  documentId: string;
   id?: string;
   type: "file" | "folder";
   content?: string;

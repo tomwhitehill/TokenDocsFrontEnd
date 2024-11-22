@@ -3,6 +3,7 @@ import { searchByMetadata, SearchByMetadataParams } from '../lib/documentSearch'
 import { verifyDocument } from '../lib/verifyDoc'
 import { toast } from 'sonner';
 import { downloadDocument, DownloadParams } from '@/lib/downloadDoc';
+import { UserStore } from '@/store/userStore';
 
 interface VerifyParams {
   subscriptionKey: string
@@ -26,27 +27,13 @@ export const documentKeys = {
   metadataByParams: (params: GetMetadataParams) => [...documentKeys.metadata(), params] as const,
 }
 
-export const useGetAllDocuments = (): UseQueryResult<unknown, Error> => {
-  return useQuery({
-    queryKey: documentKeys.all,
-    queryFn: async () => {
-      const emptySearchParams: SearchByMetadataParams = {
-        inputData: {
-          searchByMetadata: [],
-        },
-      }
-      return await searchByMetadata(emptySearchParams)
-    },
-    onError: (error) => {
-      console.error("Failed to fetch all documents:", error)
-      toast.error("Failed to fetch all documents.")
-    },
-  })
-}
-
 export const useSearchByMetadata = (): UseMutationResult<unknown, Error, SearchByMetadataParams> => {
   return useMutation({
     mutationFn: async (params: SearchByMetadataParams) => {
+      const { subscriptionKey } = UserStore.getState(); // Get the latest key
+      if (!subscriptionKey) {
+        throw new Error("Subscription key is not set");
+      }
       const promise = searchByMetadata(params);
       toast.promise(promise, {
         loading: 'Searching by metadata...',
@@ -62,6 +49,32 @@ export const useSearchByMetadata = (): UseMutationResult<unknown, Error, SearchB
     },
     onError: (error) => {
       console.error(error)
+      toast.error('Search By Metadata failed.')
+    },
+  })
+}
+
+export const useGetAllDocuments = (): UseQueryResult<unknown, Error> => {
+  const { subscriptionKey } = UserStore()
+
+  return useQuery({
+    queryKey: documentKeys.all,
+    queryFn: async () => {
+      const { subscriptionKey } = UserStore.getState(); // Get the latest key
+      if (!subscriptionKey) {
+        throw new Error("Subscription key is not set");
+      }
+      const emptySearchParams: SearchByMetadataParams = {
+        inputData: {
+          searchByMetadata: [],
+        },
+      }
+      return await searchByMetadata(emptySearchParams)
+    },
+    enabled: !!subscriptionKey,
+    onError: (error) => {
+      console.error("Failed to fetch all documents:", error)
+      toast.error("Failed to fetch all documents.")
     },
   })
 }

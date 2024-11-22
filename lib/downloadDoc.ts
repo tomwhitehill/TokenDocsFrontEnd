@@ -1,3 +1,4 @@
+import { UserStore } from "@/store/userStore";
 import axios from "axios";
 
 export interface DownloadParams {
@@ -7,9 +8,9 @@ export interface DownloadParams {
 export async function downloadDocument({
   docId,
 }: DownloadParams): Promise<Blob> {
-  let baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const subscriptionKey = process.env.NEXT_PUBLIC_SUBSCRIPTION_KEY;
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const apiVersion = process.env.NEXT_PUBLIC_API_VERSION;
+  const { subscriptionKey } = UserStore.getState();
 
   if (!baseUrl || !subscriptionKey || !apiVersion) {
     throw new Error("Missing environment variables");

@@ -14,9 +14,11 @@ body {
 
 @layer base {
   :root {
-    --primary: #4F46E5;
+    --primary: #0E81BA;
     --border: #E2E8F0;
-    /* --muted-foreground: #1E293B; */
+    --muted-foreground: #475569;
+    --muted: #EFF0F6;
+    --primary-foreground: #1E293B;
 
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
@@ -25,11 +27,11 @@ body {
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
     /* --primary: 240 5.9% 10%; */
-    --primary-foreground: 0 0% 98%;
+    /* --primary-foreground: 0 0% 98%; */
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+    /* --muted: 240 4.8% 95.9%; */
+    /* --muted-foreground: 240 3.8% 46.1%; */
     --accent: 240 4.8% 95.9%;
     --accent-foreground: 240 5.9% 10%;
     --destructive: 0 84.2% 60.2%;
@@ -124,7 +126,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 12x;
 }
 
 ::-webkit-scrollbar-track {

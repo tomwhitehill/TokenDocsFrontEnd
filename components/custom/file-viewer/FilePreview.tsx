@@ -5,6 +5,7 @@ import Image from "next/image"
 import { Loader2 } from 'lucide-react'
 import { getFileExtension } from "@/lib/utils"
 import dynamic from 'next/dynamic'
+import PDFViewer from "@/components/shared/doc-viewer/PDFViewer"
 
 const DocViewer = dynamic(() => import('@/components/shared/doc-viewer/DocViewer'), { ssr: false })
 
@@ -45,6 +46,7 @@ export function FilePreview({ file, previewData }: FilePreviewProps) {
 
   const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'ico']
   const textExtensions = ['txt', 'md', 'js', 'ts', 'jsx', 'tsx', 'json', 'html', 'css', 'csv']
+  const pdfExtension = 'pdf'
 
   if (imageExtensions.includes(extension)) {
     return (
@@ -70,6 +72,10 @@ export function FilePreview({ file, previewData }: FilePreviewProps) {
       </pre>
     )
   }
+
+  // if (extension === pdfExtension && previewUrl) {
+  //   return <PDFViewer file={previewData} />
+  // }
 
   if (previewData instanceof Blob) {
     return <DocViewer file={previewData} />

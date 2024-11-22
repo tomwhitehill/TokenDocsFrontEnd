@@ -14,6 +14,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
+import Image from "next/image"
 
 const items = [
   {
@@ -28,7 +29,14 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="bg-primary text-center font-bold tracking-wide text-primary-foreground text-lg">TD</SidebarHeader>
+      <SidebarHeader className="bg-primary">
+        <Image
+          src={"/logo/ws2.png"}
+          alt=""
+          width={40}
+          height={40}
+        />
+      </SidebarHeader>
       <SidebarContent className="bg-primary">
         <SidebarGroup>
           <SidebarGroupContent>

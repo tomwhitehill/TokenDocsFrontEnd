@@ -1,3 +1,5 @@
+import { UserStore } from "@/store/userStore"
+
 export interface SearchByMetadataParams {
   inputData: {
     searchByMetadata: Array<Record<string, string>>;
@@ -8,11 +10,11 @@ export async function searchByMetadata({
   inputData,
 }: SearchByMetadataParams): Promise<unknown[]> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const subscriptionKey = process.env.NEXT_PUBLIC_SUBSCRIPTION_KEY;
   const apiVersion = process.env.NEXT_PUBLIC_API_VERSION;
+  const { subscriptionKey } = UserStore.getState();
 
   if (!baseUrl || !subscriptionKey || !apiVersion) {
-    throw new Error("Missing environment variables");
+    throw new Error("Missing required configuration");
   }
 
   const headers: HeadersInit = {

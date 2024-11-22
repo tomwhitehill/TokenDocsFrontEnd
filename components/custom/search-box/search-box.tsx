@@ -1,145 +1,138 @@
-'use client'
+"use client";
 
-import { ChangeEvent, useEffect, useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Search, Settings2, X } from 'lucide-react'
-import { useSearchByMetadata, useGetAllDocuments } from "@/queries/documentQueries"
-import { useSearchStore } from "@/store/searchStore"
-import { useDebounce } from "@/hooks/useDebounce"
-import { toast } from "sonner"
+import { useEffect, useState } from "react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
+  useSearchByMetadata,
+  useGetAllDocuments,
+} from "@/queries/documentQueries";
+import { useSearchStore } from "@/store/searchStore";
+import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function SearchBox() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedDocType, setSelectedDocType] = useState("")
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [docTypeOptions, setDocTypeOptions] = useState<Array<{ value: string; label: string }>>([])
-  const debouncedSearchQuery = useDebounce(searchQuery, 300)
+  const [selectedKey, setSelectedKey] = useState<string>("");
+  const [selectedValue, setSelectedValue] = useState<string>("");
+  const [keyOptions, setKeyOptions] = useState<string[]>([]);
+  const [valueOptions, setValueOptions] = useState<string[]>([]);
 
-  const { setQuery, setResults } = useSearchStore()
-  const searchMutation = useSearchByMetadata()
-  const { data: allDocuments, isLoading: isLoadingAllDocs } = useGetAllDocuments()
+  const { setQuery, setResults } = useSearchStore();
+  const searchMutation = useSearchByMetadata();
+  const { data: allDocuments } = useGetAllDocuments();
 
   const performSearch = (searchData: {
-    inputData: { searchByMetadata: Array<Record<string, string>> }
+    inputData: { searchByMetadata: Array<Record<string, string>> };
   }) => {
     searchMutation.mutate(searchData, {
       onSuccess: (data: any) => {
-        console.log("Search result:", data)
-        setResults(data)
-        toast.success("Search completed successfully")
-
-        updateDocTypeOptions(data)
+        console.log("Search result:", data);
+        setResults(data);
+        toast.success("Search completed successfully");
       },
       onError: (error: unknown) => {
-        console.error("Search error:", error)
-        setResults([])
-        toast.error("Search failed. Please try again.")
+        console.error("Search error:", error);
+        setResults([]);
+        toast.error("Search failed. Please try again.");
       },
-    })
-  }
-
-  const updateDocTypeOptions = (data: any) => {
-    const newDocTypeMap = new Map()
-    if (data?.result?.value) {
-      data.result.value.forEach((item: any) => {
-        if (item.customMetadata && item.customMetadata.docType) {
-          newDocTypeMap.set(item.customMetadata.docType, item.customMetadata.docType)
-        }
-      })
-    }
-    setDocTypeOptions(Array.from(newDocTypeMap, ([value, label]) => ({ value, label })))
-  }
+    });
+  };
 
   useEffect(() => {
-    if (debouncedSearchQuery || selectedDocType) {
+    if (allDocuments?.result?.value) {
+      const keySet = new Set<string>();
+      allDocuments.result.value.map((doc: any) => {
+        if (doc.customMetadata) {
+          Object.keys(doc.customMetadata).map((key) => keySet.add(key));
+        }
+      });
+      setKeyOptions(Array.from(keySet));
+    }
+  }, [allDocuments]);
+
+  useEffect(() => {
+    if (selectedKey && allDocuments?.result?.value) {
+      const valueSet = new Set<string>();
+      allDocuments.result.value.map((doc: any) => {
+        if (doc.customMetadata && doc.customMetadata[selectedKey]) {
+          valueSet.add(doc.customMetadata[selectedKey]);
+        }
+      });
+      setValueOptions(Array.from(valueSet));
+    }
+  }, [selectedKey, allDocuments]);
+
+  useEffect(() => {
+    if (selectedKey && selectedValue) {
       const searchData = {
         inputData: {
-          searchByMetadata: debouncedSearchQuery
-            ? [{ assetId: debouncedSearchQuery }, ...(selectedDocType ? [{ docType: selectedDocType }] : [])]
-            : selectedDocType ? [{ docType: selectedDocType }] : [],
+          searchByMetadata: [{ [selectedKey]: selectedValue }],
         },
-      }
-      performSearch(searchData)
+      };
+      performSearch(searchData);
+      setQuery(`${selectedKey}: ${selectedValue}`);
     } else if (allDocuments) {
-      setResults(allDocuments)
-      updateDocTypeOptions(allDocuments)
+      setResults(allDocuments);
     }
-  }, [debouncedSearchQuery, selectedDocType, allDocuments])
+  }, [selectedKey, selectedValue, allDocuments]);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newQuery = e.target.value
-    setSearchQuery(newQuery)
-    setQuery(newQuery)
-  }
+  const handleKeyChange = (key: string) => {
+    setSelectedKey(key);
+    setSelectedValue("");
+  };
 
-  const handleDocTypeChange = (docType: string) => {
-    setSelectedDocType(docType)
-  }
+  const handleValueChange = (value: string) => {
+    setSelectedValue(value);
+  };
 
-  const clearDocTypeSelection = () => {
-    setSelectedDocType("")
-  }
+  const clearSelection = () => {
+    setSelectedKey("");
+    setSelectedValue("");
+    setQuery("");
+  };
 
   return (
-    <div className="relative max-w-xs">
-      <div className="relative">
-        <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          type="search"
-          placeholder="Search by customMetadata"
-          value={searchQuery}
-          onChange={handleInputChange}
-          className="pl-8 pr-10 rounded-full bg-card"
-        />
-        <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-          <DropdownMenuTrigger asChild>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="absolute right-0.5 top-1/2 -translate-y-1/2 h-auto p-2 hover:bg-primary hover:text-primary-foreground rounded-full"
-            >
-              <Settings2 className="h-4 w-4" />
-              <span className="sr-only">Search settings</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>Document Type</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <div className="px-2 py-1.5">
-              <RadioGroup value={selectedDocType} onValueChange={handleDocTypeChange}>
-                {docTypeOptions.map((option) => (
-                  <div key={option.value} className="flex items-center space-x-2 mb-2">
-                    <RadioGroupItem value={option.value} id={option.value} />
-                    <Label htmlFor={option.value}>{option.label}</Label>
-                  </div>
-                ))}
-              </RadioGroup>
-              {selectedDocType && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearDocTypeSelection}
-                  className="w-full mt-2 flex items-center justify-center"
-                >
-                  <X className="h-4 w-4 mr-2" />
-                  Clear selection
-                </Button>
-              )}
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+    <div className="relative flex items-center space-x-2">
+      <Select value={selectedKey} onValueChange={handleKeyChange}>
+        <SelectTrigger className="w-[180px] rounded-full bg-card">
+          <SelectValue placeholder="Select Type" />
+        </SelectTrigger>
+        <SelectContent>
+          {keyOptions.map((key) => (
+            <SelectItem key={key} value={key}>
+              {key}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <Select
+        value={selectedValue}
+        onValueChange={handleValueChange}
+        disabled={!selectedKey}
+      >
+        <SelectTrigger className="w-[180px] rounded-full bg-card">
+          <SelectValue placeholder="Select value" />
+        </SelectTrigger>
+        <SelectContent>
+          {valueOptions.map((value) => (
+            <SelectItem key={value} value={value}>
+              {value}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      {/* <Button
+        disabled={Boolean(selectedKey === "" ? true : false)}
+        onClick={clearSelection}
+        className="text-white rounded-full h-auto p-2"
+      >
+        <X />
+      </Button> */}
     </div>
-  )
+  );
 }

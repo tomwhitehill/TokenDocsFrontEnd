@@ -9,6 +9,7 @@ import axios from "axios"
 import { Loader2 } from 'lucide-react'
 import { getFileExtension } from "@/lib/utils"
 import { FilePreview } from "./FilePreview"
+import { UserStore } from "@/store/userStore"
 
 interface FileViewerProps {
   selectedFile: FolderItem | null;
@@ -19,16 +20,16 @@ export function FileViewer({ selectedFile }: FileViewerProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [fileUrl, setFileUrl] = useState("")
+  const { subscriptionKey } = UserStore()
 
   const fetchPreview = useCallback(async (documentId: string) => {
     setIsLoading(true)
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
-      const subscriptionKey = process.env.NEXT_PUBLIC_SUBSCRIPTION_KEY
       const apiVersion = process.env.NEXT_PUBLIC_API_VERSION
 
       if (!baseUrl || !subscriptionKey || !apiVersion) {
-        throw new Error("Missing environment variables")
+        throw new Error("Missing required configuration")
       }
 
       const headers = {
@@ -67,17 +68,16 @@ export function FileViewer({ selectedFile }: FileViewerProps) {
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [subscriptionKey])
 
   const downloadFile = async (documentId: string) => {
     setIsDownloading(true)
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
-      const subscriptionKey = process.env.NEXT_PUBLIC_SUBSCRIPTION_KEY
       const apiVersion = process.env.NEXT_PUBLIC_API_VERSION
 
       if (!baseUrl || !subscriptionKey || !apiVersion) {
-        throw new Error("Missing environment variables")
+        throw new Error("Missing required configuration")
       }
 
       const headers = {
@@ -128,10 +128,10 @@ export function FileViewer({ selectedFile }: FileViewerProps) {
   }
 
   useEffect(() => {
-    if (selectedFile) {
+    if (selectedFile && subscriptionKey) {
       fetchPreview(selectedFile.documentId)
     }
-  }, [selectedFile, fetchPreview])
+  }, [selectedFile, fetchPreview, subscriptionKey])
 
   if (!selectedFile) {
     return (
@@ -187,7 +187,7 @@ export function FileViewer({ selectedFile }: FileViewerProps) {
             <Button
               onClick={viewFile}
               disabled={isLoading}
-              className="md:w-40 rounded-full py-6"
+              className="md:w-40 rounded-full py-6 text-white"
             >
               {isLoading ? (
                 <>
@@ -201,7 +201,7 @@ export function FileViewer({ selectedFile }: FileViewerProps) {
             <Button
               onClick={() => downloadFile(selectedFile.documentId)}
               disabled={isDownloading}
-              className="md:w-40 rounded-full py-6"
+              className="md:w-40 rounded-full py-6 text-white"
             >
               {isDownloading ? (
                 <>
