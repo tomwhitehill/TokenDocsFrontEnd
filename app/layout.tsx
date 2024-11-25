@@ -55,11 +55,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const SIDEBAR_WIDTH_ICON = "4rem"
   return (
     <html lang="en">
       <body className={`${avenir.variable} antialiased font-sans`}>
         <QueryProvider>
-          <SidebarProvider defaultOpen={false}>
+          <SidebarProvider defaultOpen={false} style={{ "--sidebar-width-icon": SIDEBAR_WIDTH_ICON }} >
             <Toaster position="top-center" />
             <AppSidebar />
             <main className={cn("flex flex-col w-full h-full")}>

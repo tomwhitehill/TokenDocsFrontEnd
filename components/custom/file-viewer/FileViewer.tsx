@@ -147,7 +147,7 @@ export function FileViewer({ selectedFile }: FileViewerProps) {
     <section className="border border-t-0 grid grid-cols-2 divide-x">
       {/* JSON Panel */}
       <div className="h-[calc(100svh-9rem)] overflow-auto flex flex-col">
-        <div className="p-4 border-b font-semibold">Raw Data</div>
+        <div className="p-4 border-b font-semibold">Metadata</div>
         <ScrollArea className="flex-1">
           <div className="p-4">
             <pre className="text-sm font-mono whitespace-pre-wrap break-words">
@@ -187,7 +187,7 @@ export function FileViewer({ selectedFile }: FileViewerProps) {
             <Button
               onClick={viewFile}
               disabled={isLoading}
-              className="md:w-40 rounded-full py-6 text-white"
+              className="md:w-40 rounded-full py-6 text-white transition-colors hover:bg-primaryTwo"
             >
               {isLoading ? (
                 <>
@@ -201,7 +201,7 @@ export function FileViewer({ selectedFile }: FileViewerProps) {
             <Button
               onClick={() => downloadFile(selectedFile.documentId)}
               disabled={isDownloading}
-              className="md:w-40 rounded-full py-6 text-white"
+              className="md:w-40 rounded-full py-6 text-white transition-colors hover:bg-primaryTwo"
             >
               {isDownloading ? (
                 <>

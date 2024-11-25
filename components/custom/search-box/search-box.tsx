@@ -98,7 +98,7 @@ export default function SearchBox() {
     <div className="relative flex items-center space-x-2">
       <Select value={selectedKey} onValueChange={handleKeyChange}>
         <SelectTrigger className="w-[180px] rounded-full bg-card">
-          <SelectValue placeholder="Select Type" />
+          <SelectValue placeholder="Select key" />
         </SelectTrigger>
         <SelectContent>
           {keyOptions.map((key) => (

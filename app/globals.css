@@ -15,6 +15,7 @@ body {
 @layer base {
   :root {
     --primary: #0E81BA;
+    --primary-two: #FE7C7C; 
     --border: #E2E8F0;
     --muted-foreground: #475569;
     --muted: #EFF0F6;
