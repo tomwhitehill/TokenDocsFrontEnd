@@ -4,6 +4,7 @@ import { verifyDocument } from '../lib/verifyDoc'
 import { toast } from 'sonner';
 import { downloadDocument, DownloadParams } from '@/lib/downloadDoc';
 import { UserStore } from '@/store/userStore';
+import { uploadFile, UploadFileParams } from '@/lib/uploadDoc';
 
 interface VerifyParams {
   subscriptionKey: string
@@ -60,7 +61,7 @@ export const useGetAllDocuments = (): UseQueryResult<unknown, Error> => {
   return useQuery({
     queryKey: documentKeys.all,
     queryFn: async () => {
-      const { subscriptionKey } = UserStore.getState(); // Get the latest key
+      const { subscriptionKey } = UserStore.getState();
       if (!subscriptionKey) {
         throw new Error("Subscription key is not set");
       }
@@ -137,4 +138,17 @@ export const useDownloadHandler = () => {
     handleDownload,
     isDownloading: downloadMutation.isPending,
   };
+};
+
+export const useUploadFile = (): UseMutationResult<unknown, Error, UploadFileParams> => {
+  return useMutation({
+    mutationFn: uploadFile,
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error('Upload failed.');
+    },
+  });
 };

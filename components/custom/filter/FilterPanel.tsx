@@ -144,7 +144,7 @@ export default function FilterPanel() {
         </Select>
 
         <h3 className="text-lg">CustomMetadata:</h3>
-        <h3 className="text-lg">Keys</h3>
+        <h3>Keys</h3>
         <Select value={selectedKey} onValueChange={handleKeyChange}>
           <SelectTrigger className="w-fit rounded-full bg-muted">
             <SelectValue placeholder="Select key" />
@@ -158,7 +158,7 @@ export default function FilterPanel() {
           </SelectContent>
         </Select>
 
-        <h3 className="text-lg">Values</h3>
+        <h3>Values</h3>
         <Select
           value={selectedValue}
           onValueChange={handleValueChange}
@@ -187,4 +187,3 @@ export default function FilterPanel() {
     </section>
   );
 }
-
