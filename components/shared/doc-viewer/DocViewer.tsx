@@ -1,7 +1,7 @@
 "use client";
 
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
-import '@cyntler/react-doc-viewer/dist/index.css';
+// import '@cyntler/react-doc-viewer/dist/index.css';
 import { useEffect, useState } from "react";
 
 interface DocViewerProps {

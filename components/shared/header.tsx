@@ -1,10 +1,10 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,23 +12,23 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { UserRound, Eye, EyeOff } from 'lucide-react'
-import { UserStore } from "@/store/userStore"
-import { useQueryClient } from '@tanstack/react-query'
-import { documentKeys } from "@/queries/documentQueries"
-import Image from "next/image"
+} from "@/components/ui/dropdown-menu";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { UserRound, Eye, EyeOff } from "lucide-react";
+import { UserStore } from "@/store/userStore";
+import { useQueryClient } from "@tanstack/react-query";
+import { documentKeys } from "@/queries/documentQueries";
+import Image from "next/image";
 
 export default function Header() {
   const { subscriptionKey, setSubscriptionKey } = UserStore();
   const [tempKey, setTempKey] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [showKey, setShowKey] = useState(false);
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    const storedKey = localStorage.getItem('user-store');
+    const storedKey = localStorage.getItem("user-store");
     if (storedKey) {
       const parsedKey = JSON.parse(storedKey);
       if (parsedKey.state && parsedKey.state.subscriptionKey) {
@@ -46,20 +46,28 @@ export default function Header() {
   }, [subscriptionKey]);
 
   const handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTempKey(e.target.value)
-  }
+    setTempKey(e.target.value);
+  };
 
   const handleSaveKey = () => {
-    setSubscriptionKey(tempKey)
-    setIsOpen(false)
-    queryClient.invalidateQueries(documentKeys.all)
-  }
+    setSubscriptionKey(tempKey);
+    setIsOpen(false);
+    queryClient.invalidateQueries(documentKeys.all);
+  };
 
   return (
     <Card className="bg-[#F8FAFC] h-[70px] rounded-none flex items-center justify-between">
       <div className="flex">
         <SidebarTrigger className="block md:hidden" />
-        <figure className="w-52 h-[70px] relative"> <Image src="/logo/TokenDocs.png" alt="TokenDocs" className="object-contain" fill /> </figure>
+        <figure className="w-52 h-[70px] relative">
+          <Image
+            src="/logo/TokenDocs.png"
+            priority
+            alt="TokenDocs"
+            className="object-contain"
+            fill
+          />
+        </figure>
       </div>
       <CardContent className="flex items-center p-0 gap-2 pr-8 py-4">
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -72,7 +80,10 @@ export default function Header() {
           <DropdownMenuContent className="w-96" align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="focus:bg-background" onSelect={(e) => e.preventDefault()}>
+            <DropdownMenuItem
+              className="focus:bg-background"
+              onSelect={(e) => e.preventDefault()}
+            >
               <div className="w-full space-y-2">
                 <Label htmlFor="subscriptionKey">Subscription Key</Label>
                 <div className="relative">
@@ -91,10 +102,17 @@ export default function Header() {
                     className="absolute right-0 top-0 h-full px-3"
                     onClick={() => setShowKey(!showKey)}
                   >
-                    {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showKey ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
-                <Button onClick={handleSaveKey} className="w-full text-white hover:bg-primaryTwo">
+                <Button
+                  onClick={handleSaveKey}
+                  className="w-full text-white hover:bg-primaryTwo"
+                >
                   Save Key
                 </Button>
               </div>
@@ -103,6 +121,5 @@ export default function Header() {
         </DropdownMenu>
       </CardContent>
     </Card>
-  )
+  );
 }
-
